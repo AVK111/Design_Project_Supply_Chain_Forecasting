@@ -18,6 +18,9 @@ const Footer = () => {
   }, {
     name: 'Contact',
     href: '#contact'
+  },{
+    name: 'Model',
+    href: '#model'
   }];
   const productCategories = [{
     name: 'Fruits',
