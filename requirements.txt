@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pandas
+numpy
+joblib
+feedparser
+transformers
+groq
+torch
+scikit-learn
+xgboost

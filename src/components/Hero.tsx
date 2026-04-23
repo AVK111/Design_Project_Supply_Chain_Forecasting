@@ -2,9 +2,33 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight, Globe, Leaf, Award } from 'lucide-react';
 import heroImage from '@/assets/hero-bg.jpg';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { downloadCatalog, recordInquiry } from '@/services/agriApi';
+import { toast } from '@/hooks/use-toast';
 
 const Hero = () => {
   useScrollAnimation();
+
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleCatalogDownload = async () => {
+    try {
+      await recordInquiry({
+        inquiry_type: 'catalog_download',
+        source: 'hero',
+        message: 'Visitor downloaded the product catalog from the hero section.',
+      });
+      await downloadCatalog();
+      toast({ title: 'Catalog downloaded', description: 'The product catalog is ready.' });
+    } catch (error) {
+      toast({
+        title: 'Download failed',
+        description: error instanceof Error ? error.message : 'Please start the backend and try again.',
+        variant: 'destructive',
+      });
+    }
+  };
 
   return (
     <section id="home" className="relative min-h-screen flex items-center bg-animated">
@@ -47,11 +71,17 @@ const Hero = () => {
                 <Button 
                   size="lg" 
                   className="bg-gradient-to-r from-primary to-primary-light hover:shadow-hover transition-smooth group hover-lift animate-pulse-glow"
+                  onClick={() => scrollToSection('products')}
                 >
                   Explore Products
                   <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-2 transition-transform duration-300" />
                 </Button>
-                <Button variant="outline" size="lg" className="border-primary text-primary hover:bg-primary/5 hover-lift">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-primary text-primary hover:bg-primary/5 hover-lift"
+                  onClick={handleCatalogDownload}
+                >
                   Download Catalog
                 </Button>
               </div>

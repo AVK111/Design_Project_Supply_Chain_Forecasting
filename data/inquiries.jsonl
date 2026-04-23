@@ -1,0 +1,8 @@
+{"created_at": "2026-04-20T08:09:35.335432Z", "inquiry_type": "catalog_download", "source": "hero", "product": null, "message": "Visitor downloaded the product catalog from the hero section."}
+{"created_at": "2026-04-20T08:09:47.531265Z", "inquiry_type": "quote_request", "source": "desktop_header", "product": null, "message": "Visitor clicked Get Quote."}
+{"created_at": "2026-04-20T08:09:50.107993Z", "inquiry_type": "catalog_request", "source": "contact_section", "product": null, "message": "Visitor requested the product catalog from the contact section."}
+{"created_at": "2026-04-20T08:10:00.672013Z", "inquiry_type": "schedule_call", "source": "contact_section", "product": null, "message": "Visitor clicked Schedule a Call."}
+{"created_at": "2026-04-20T08:10:09.096673Z", "inquiry_type": "email_inquiry", "source": "contact_section", "product": null, "message": "Visitor clicked Send Email Inquiry."}
+{"created_at": "2026-04-20T08:10:43.780647Z", "inquiry_type": "catalog_download", "source": "hero", "product": null, "message": "Visitor downloaded the product catalog from the hero section."}
+{"created_at": "2026-04-20T08:11:04.024033Z", "inquiry_type": "catalog_request", "source": "contact_section", "product": null, "message": "Visitor requested the product catalog from the contact section."}
+{"created_at": "2026-04-20T08:11:07.356028Z", "inquiry_type": "schedule_call", "source": "contact_section", "product": null, "message": "Visitor clicked Schedule a Call."}

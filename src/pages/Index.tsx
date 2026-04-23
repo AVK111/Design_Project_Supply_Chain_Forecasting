@@ -5,6 +5,7 @@ import Model from '@/components/Model';
 import About from '@/components/About';
 import Footer from '@/components/Footer';
 
+
 const Index = () => {
   return (
     <div className="min-h-screen">

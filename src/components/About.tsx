@@ -2,9 +2,59 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { MapPin, Phone, Mail, Globe, Users, CheckCircle } from 'lucide-react';
 import { useScrollAnimation } from '@/hooks/useScrollAnimation';
+import { downloadCatalog, recordInquiry } from '@/services/agriApi';
+import { toast } from '@/hooks/use-toast';
 
 const About = () => {
   useScrollAnimation();
+
+  const emailAddress = 'parthajorchardpvtltd@gmail.com';
+  const phoneNumber = '+919921320091';
+
+  const recordAction = async (inquiry_type: string, message: string) => {
+    try {
+      const response = await recordInquiry({
+        inquiry_type,
+        source: 'contact_section',
+        message,
+      });
+      toast({ title: 'Request received', description: response });
+    } catch (error) {
+      toast({
+        title: 'Backend not reachable',
+        description: error instanceof Error ? error.message : 'Start the backend and try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleCatalogRequest = async () => {
+    try {
+      await recordInquiry({
+        inquiry_type: 'catalog_request',
+        source: 'contact_section',
+        message: 'Visitor requested the product catalog from the contact section.',
+      });
+      await downloadCatalog();
+      toast({ title: 'Catalog downloaded', description: 'The product catalog is ready.' });
+    } catch (error) {
+      toast({
+        title: 'Catalog request failed',
+        description: error instanceof Error ? error.message : 'Please start the backend and try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleScheduleCall = async () => {
+    await recordAction('schedule_call', 'Visitor clicked Schedule a Call.');
+    window.location.href = `tel:${phoneNumber}`;
+  };
+
+  const handleEmailInquiry = async () => {
+    await recordAction('email_inquiry', 'Visitor clicked Send Email Inquiry.');
+    window.location.href = `mailto:${emailAddress}?subject=Export%20Inquiry%20-%20Parthaj%20Orchard`;
+  };
   
   const features = [
     {
@@ -68,7 +118,10 @@ const About = () => {
                   </p>
                 </div>
 
-                <Button className="bg-gradient-to-r from-primary to-primary-light">
+                <Button
+                  className="bg-gradient-to-r from-primary to-primary-light"
+                  onClick={() => document.getElementById('certificates')?.scrollIntoView({ behavior: 'smooth' })}
+                >
                   Learn More About Us
                 </Button>
               </div>
@@ -201,13 +254,24 @@ const About = () => {
                     pricing, and delivery schedules.
                   </p>
                   <div className="space-y-3">
-                    <Button className="w-full bg-gradient-to-r from-primary to-primary-light hover-lift animate-pulse-glow">
+                    <Button
+                      className="w-full bg-gradient-to-r from-primary to-primary-light hover-lift animate-pulse-glow"
+                      onClick={handleCatalogRequest}
+                    >
                       Request Product Catalog
                     </Button>
-                    <Button variant="outline" className="w-full border-primary text-primary hover-lift">
+                    <Button
+                      variant="outline"
+                      className="w-full border-primary text-primary hover-lift"
+                      onClick={handleScheduleCall}
+                    >
                       Schedule a Call
                     </Button>
-                    <Button variant="ghost" className="w-full text-primary hover-scale">
+                    <Button
+                      variant="ghost"
+                      className="w-full text-primary hover-scale"
+                      onClick={handleEmailInquiry}
+                    >
                       Send Email Inquiry
                     </Button>
                   </div>

@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import type React from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import logo from '@/assets/logo.png';
+import { recordInquiry } from '@/services/agriApi';
+import { toast } from '@/hooks/use-toast';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,6 +18,39 @@ const Header = () => {
     { name: 'Contact', href: '#contact' },
     { name: 'Model', href: '#model' }
   ];
+
+  const handleQuoteClick = async (source: string) => {
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+    setIsMenuOpen(false);
+
+    try {
+      const message = await recordInquiry({
+        inquiry_type: 'quote_request',
+        source,
+        message: 'Visitor clicked Get Quote.',
+      });
+      toast({ title: 'Quote request started', description: message });
+    } catch (error) {
+      toast({
+        title: 'Backend not reachable',
+        description: error instanceof Error ? error.message : 'Start the backend and try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key !== 'Enter') return;
+
+    const query = event.currentTarget.value.trim();
+    if (!query) return;
+
+    document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+    toast({
+      title: 'Search ready',
+      description: `Showing product categories for "${query}".`,
+    });
+  };
 
   return (
     <>
@@ -58,9 +94,13 @@ const Header = () => {
                 <Input
                   placeholder="Search products..."
                   className="pl-10 w-48 bg-muted/50 border-0"
+                  onKeyDown={handleSearch}
                 />
               </div>
-              <Button className="bg-gradient-to-r from-primary to-primary-light hover:shadow-hover transition-smooth animate-pulse-glow">
+              <Button
+                className="bg-gradient-to-r from-primary to-primary-light hover:shadow-hover transition-smooth animate-pulse-glow"
+                onClick={() => handleQuoteClick('desktop_header')}
+              >
                 Get Quote
               </Button>
             </div>
@@ -91,7 +131,10 @@ const Header = () => {
                   </a>
                 ))}
                 <div className="pt-3 border-t">
-                  <Button className="w-full bg-gradient-to-r from-primary to-primary-light">
+                  <Button
+                    className="w-full bg-gradient-to-r from-primary to-primary-light"
+                    onClick={() => handleQuoteClick('mobile_header')}
+                  >
                     Get Quote
                   </Button>
                 </div>

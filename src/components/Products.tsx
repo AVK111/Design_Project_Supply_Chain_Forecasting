@@ -9,9 +9,49 @@ import vegetableImage from '@/assets/fresh-vegetables-bg.webp'
 import grainsImage from '@/assets/grains-and-cereals-bg.webp'
 import seedsImage from '@/assets/oil-seeds-bg.jpg'
 import spicesImage from '@/assets/spices-herbs-bg.jpg'
+import { downloadCatalog, recordInquiry } from '@/services/agriApi';
+import { toast } from '@/hooks/use-toast';
 
 const Products = () => {
   useScrollAnimation();
+
+  const handleCatalogRequest = async () => {
+    try {
+      await recordInquiry({
+        inquiry_type: 'catalog_request',
+        source: 'products_section',
+        message: 'Visitor requested the product catalog.',
+      });
+      await downloadCatalog();
+      toast({ title: 'Catalog downloaded', description: 'The product catalog is ready.' });
+    } catch (error) {
+      toast({
+        title: 'Catalog request failed',
+        description: error instanceof Error ? error.message : 'Please start the backend and try again.',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleQuoteRequest = async (product?: string) => {
+    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
+
+    try {
+      const message = await recordInquiry({
+        inquiry_type: 'quote_request',
+        source: 'products_section',
+        product,
+        message: product ? `Visitor requested a quote for ${product}.` : 'Visitor requested a custom quote.',
+      });
+      toast({ title: 'Quote request started', description: message });
+    } catch (error) {
+      toast({
+        title: 'Quote request failed',
+        description: error instanceof Error ? error.message : 'Please start the backend and try again.',
+        variant: 'destructive',
+      });
+    }
+  };
   
   const categories = [
     { 
@@ -98,7 +138,11 @@ const Products = () => {
             {categories.map((category, index) => {
               const IconComponent = category.icon;
               return (
-                <Card key={index} className={`group hover-lift cursor-pointer border-0 shadow-soft animate-on-scroll stagger-delay-${index + 1}`}>
+                <Card
+                  key={index}
+                  className={`group hover-lift cursor-pointer border-0 shadow-soft animate-on-scroll stagger-delay-${index + 1}`}
+                  onClick={() => handleQuoteRequest(category.name)}
+                >
                   <CardContent className="p-6">
                   {/* Category Image */}
                   <img
@@ -143,10 +187,19 @@ const Products = () => {
               pricing, and delivery schedules for any of our product categories.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-gradient-to-r from-primary to-primary-light hover-lift animate-pulse-glow">
+              <Button
+                size="lg"
+                className="bg-gradient-to-r from-primary to-primary-light hover-lift animate-pulse-glow"
+                onClick={handleCatalogRequest}
+              >
                 Request Product Catalog
               </Button>
-              <Button variant="outline" size="lg" className="border-primary text-primary hover-lift">
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-primary text-primary hover-lift"
+                onClick={() => handleQuoteRequest()}
+              >
                 Get Custom Quote
               </Button>
             </div>
