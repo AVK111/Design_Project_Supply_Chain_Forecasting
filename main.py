@@ -51,7 +51,7 @@ le_commodity = joblib.load("models/commodity_encoder.pkl")
 sentiment_model = pipeline("sentiment-analysis", framework="pt")
 
 # ✅ GROQ CLIENT
-client = Groq(api_key="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")
+client = Groq(api_key="API_KEY")
 
 # =====================================================
 # APP
